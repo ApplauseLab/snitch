@@ -235,6 +235,8 @@ The switch is intentionally file-based so the server plugin and TUI plugin can c
 
 The service listens on `127.0.0.1:4766` by default. It is implemented in `packages/snitch-service/src/index.ts`.
 
+Agents and scripts can print direct API usage docs with `snitch skill`. This path does not require OpenCode; it only requires the local Snitch service to be running.
+
 | Method | Path                   | Description                                                   |
 | ------ | ---------------------- | ------------------------------------------------------------- |
 | `GET`  | `/health`              | Returns `{ "ok": true }`.                                     |

@@ -10,6 +10,12 @@ Snitch listens for your OpenCode sessions and snitches them to you using Kokoro.
 bunx github:ApplauseLab/snitch#main init
 ```
 
+Agents and scripts can read the direct API guide with:
+
+```bash
+bunx github:ApplauseLab/snitch#main skill
+```
+
 `snitch init` installs the durable runtime under `~/.snitch`, configures OpenCode, and creates a LaunchAgent named `ai.applauselab.snitch`.
 
 Useful flags:
