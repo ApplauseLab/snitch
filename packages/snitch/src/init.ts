@@ -16,6 +16,7 @@ export type InitOptions = {
   installPackages?: boolean;
   downloadModel?: boolean;
   startService?: boolean;
+  sourceRoot?: string;
 };
 
 export type InitResult = {
@@ -30,9 +31,15 @@ type JsonObject = Record<string, unknown>;
 type CommandRunner = (args: string[], cwd?: string) => Promise<void>;
 // eslint-disable-next-line no-unused-vars
 type RuntimeMaterializer = (homeDir: string) => Promise<void>;
+// eslint-disable-next-line no-unused-vars
+type PackageDistPath = (packageName: string) => string;
 
 const DEFAULT_SERVICE_URL = 'http://127.0.0.1:4766';
 const SERVICE_LABEL = 'ai.applauselab.snitch';
+const RUNTIME_DEPENDENCIES = {
+  '@huggingface/transformers': '^3.5.1',
+  'kokoro-js': '^1.2.1',
+};
 function runtimeDir(homeDir: string): string {
   return join(homeDir, '.snitch');
 }
@@ -263,7 +270,44 @@ export async function installRuntimePackages(
   await materializer(homeDir);
 }
 
+export async function installRuntimeFromSource(
+  sourceRoot: string,
+  runner: CommandRunner = runCommand,
+  homeDir = homedir()
+): Promise<void> {
+  const dir = runtimeInstallDir(homeDir);
+  await mkdir(dir, { recursive: true });
+  await writeJson(join(dir, 'package.json'), {
+    private: true,
+    type: 'module',
+    dependencies: RUNTIME_DEPENDENCIES,
+  });
+
+  await runner(['bun', 'install'], sourceRoot);
+  await runner(['bun', 'run', 'build'], sourceRoot);
+  await runner(['bun', 'install'], dir);
+  await materializeRuntimeFilesFromSource(sourceRoot, homeDir);
+}
+
 async function materializeRuntimeFiles(homeDir: string): Promise<void> {
+  await materializeRuntimeFilesFromPackages(homeDir, (packageName) =>
+    join(installedPackagePath(homeDir, packageName), 'dist')
+  );
+}
+
+async function materializeRuntimeFilesFromSource(
+  sourceRoot: string,
+  homeDir: string
+): Promise<void> {
+  await materializeRuntimeFilesFromPackages(homeDir, (packageName) =>
+    join(sourceRoot, 'packages', packageName, 'dist')
+  );
+}
+
+async function materializeRuntimeFilesFromPackages(
+  homeDir: string,
+  distPath: PackageDistPath
+): Promise<void> {
   const root = runtimeDir(homeDir);
   const serviceDir = join(root, 'service');
   const pluginDir = join(root, 'opencode-plugin');
@@ -273,17 +317,11 @@ async function materializeRuntimeFiles(homeDir: string): Promise<void> {
   await mkdir(serviceDir, { recursive: true });
   await mkdir(pluginDir, { recursive: true });
 
-  await cp(join(installedPackagePath(homeDir, 'snitch-service'), 'dist'), serviceDir, {
+  await cp(distPath('snitch-service'), serviceDir, {
     recursive: true,
   });
-  await cp(
-    join(installedPackagePath(homeDir, 'opencode-plugin-snitch'), 'dist', 'index.js'),
-    join(pluginDir, 'index.js')
-  );
-  await cp(
-    join(installedPackagePath(homeDir, 'opencode-plugin-snitch-tui'), 'dist', 'index.js'),
-    join(pluginDir, 'tui.js')
-  );
+  await cp(join(distPath('opencode-plugin-snitch'), 'index.js'), join(pluginDir, 'index.js'));
+  await cp(join(distPath('opencode-plugin-snitch-tui'), 'index.js'), join(pluginDir, 'tui.js'));
 
   await symlink(join('..', 'runtime', 'node_modules'), join(serviceDir, 'node_modules'), 'dir');
 }
@@ -296,11 +334,15 @@ async function runCommand(command: string[], cwd?: string): Promise<void> {
 
 export async function runInit(options: InitOptions): Promise<InitResult> {
   if (options.installPackages !== false) {
-    await installRuntimePackages(
-      options.packageManager ?? 'bun',
-      runCommand,
-      options.homeDir ?? homedir()
-    );
+    if (options.sourceRoot) {
+      await installRuntimeFromSource(options.sourceRoot, runCommand, options.homeDir ?? homedir());
+    } else {
+      await installRuntimePackages(
+        options.packageManager ?? 'bun',
+        runCommand,
+        options.homeDir ?? homedir()
+      );
+    }
   }
 
   const result = await configureOpenCode(options);

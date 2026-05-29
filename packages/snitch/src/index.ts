@@ -2,6 +2,8 @@
 
 import { createInterface } from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { runInit, type InitScope, type NarrationBackend } from './init.ts';
 
@@ -34,6 +36,19 @@ function valueFor(args: string[], flag: string): string | undefined {
   return args[index + 1];
 }
 
+async function findSourceRoot(): Promise<string | undefined> {
+  const currentDir = dirname(fileURLToPath(import.meta.url));
+  const candidates = [join(currentDir, '..', '..', '..'), join(currentDir, '..')];
+
+  for (const candidate of candidates) {
+    if (await Bun.file(join(candidate, 'packages', 'snitch-service', 'package.json')).exists()) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+}
+
 async function init(args: string[]): Promise<void> {
   const scopeFlag = valueFor(args, '--scope');
   const backendFlag = valueFor(args, '--backend');
@@ -57,6 +72,7 @@ async function init(args: string[]): Promise<void> {
     installPackages: !hasFlag(args, '--skip-install'),
     downloadModel: !hasFlag(args, '--skip-model-download'),
     startService: !hasFlag(args, '--no-start-service'),
+    sourceRoot: await findSourceRoot(),
   });
 
   writeLine(`OpenCode config: ${result.opencodeConfigPath}`);

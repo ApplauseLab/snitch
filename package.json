@@ -5,6 +5,9 @@
   "author": "Kris",
   "private": true,
   "type": "module",
+  "bin": {
+    "snitch": "./packages/snitch/src/index.ts"
+  },
   "workspaces": [
     "packages/*"
   ],
