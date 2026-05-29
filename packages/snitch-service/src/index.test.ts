@@ -2,6 +2,8 @@ import { describe, expect, test } from 'bun:test';
 
 import {
   createNarrationServer,
+  kokoroBoundarySilenceMs,
+  kokoroInitialSilenceMs,
   NarrationService,
   narrationTextForRendering,
   normalizeNarrationRequest,
@@ -102,6 +104,28 @@ describe('createNarrationServer', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('audio/aiff');
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+  });
+});
+
+describe('Kokoro playback padding', () => {
+  test('uses conservative chunk boundary silence by default', () => {
+    expect(kokoroInitialSilenceMs()).toBe(120);
+    expect(kokoroBoundarySilenceMs()).toBe(350);
+  });
+
+  test('allows playback padding overrides from environment', () => {
+    const previousInitial = Bun.env.NARRATION_KOKORO_INITIAL_SILENCE_MS;
+    const previousBoundary = Bun.env.NARRATION_KOKORO_BOUNDARY_SILENCE_MS;
+    Bun.env.NARRATION_KOKORO_INITIAL_SILENCE_MS = '250';
+    Bun.env.NARRATION_KOKORO_BOUNDARY_SILENCE_MS = '500';
+
+    try {
+      expect(kokoroInitialSilenceMs()).toBe(250);
+      expect(kokoroBoundarySilenceMs()).toBe(500);
+    } finally {
+      Bun.env.NARRATION_KOKORO_INITIAL_SILENCE_MS = previousInitial;
+      Bun.env.NARRATION_KOKORO_BOUNDARY_SILENCE_MS = previousBoundary;
+    }
   });
 });
 

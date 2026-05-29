@@ -362,17 +362,19 @@ flowchart LR
 
 The generated command includes environment variables such as:
 
-| Variable                     | Meaning                                                                     |
-| ---------------------------- | --------------------------------------------------------------------------- |
-| `NARRATION_BACKEND`          | `kokoro` or `say`.                                                          |
-| `NARRATION_KOKORO_CACHE_DIR` | Snitch-owned Hugging Face Transformers cache directory.                     |
-| `NARRATION_PORT`             | Optional service port override. Defaults to `4766`.                         |
-| `NARRATION_HOST`             | Optional bind host override. Defaults to `127.0.0.1`.                       |
-| `NARRATION_KOKORO_VOICE`     | Optional default Kokoro voice override.                                     |
-| `NARRATION_KOKORO_PLAYBACK`  | Optional playback mode: `afplay` or `ffplay`; unset means CoreAudio helper. |
-| `NARRATION_KOKORO_STREAM`    | Set to `0` to disable Kokoro streaming and play generated WAV files.        |
-| `NARRATION_PCM_PLAYER_PATH`  | Optional override for the CoreAudio helper path.                            |
-| `NARRATION_FFPLAY_PATH`      | Optional override for `ffplay`. Defaults to `/opt/homebrew/bin/ffplay`.     |
+| Variable                               | Meaning                                                                                             |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `NARRATION_BACKEND`                    | `kokoro` or `say`.                                                                                  |
+| `NARRATION_KOKORO_CACHE_DIR`           | Snitch-owned Hugging Face Transformers cache directory.                                             |
+| `NARRATION_PORT`                       | Optional service port override. Defaults to `4766`.                                                 |
+| `NARRATION_HOST`                       | Optional bind host override. Defaults to `127.0.0.1`.                                               |
+| `NARRATION_KOKORO_VOICE`               | Optional default Kokoro voice override.                                                             |
+| `NARRATION_KOKORO_PLAYBACK`            | Optional playback mode: `afplay` or `ffplay`; unset means CoreAudio helper.                         |
+| `NARRATION_KOKORO_STREAM`              | Set to `0` to disable Kokoro streaming and play generated WAV files.                                |
+| `NARRATION_KOKORO_INITIAL_SILENCE_MS`  | Silence inserted before the first streamed Kokoro chunk. Defaults to `120`.                         |
+| `NARRATION_KOKORO_BOUNDARY_SILENCE_MS` | Silence inserted between streamed Kokoro sentence chunks to avoid clipped words. Defaults to `350`. |
+| `NARRATION_PCM_PLAYER_PATH`            | Optional override for the CoreAudio helper path.                                                    |
+| `NARRATION_FFPLAY_PATH`                | Optional override for `ffplay`. Defaults to `/opt/homebrew/bin/ffplay`.                             |
 
 ## Source Install From GitHub
 

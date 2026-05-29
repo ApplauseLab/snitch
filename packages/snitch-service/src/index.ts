@@ -89,6 +89,8 @@ const DEFAULT_SAY_OPTIONS: Required<SayOptions> = {
   rate: 0,
   sayPath: '/usr/bin/say',
 };
+const DEFAULT_KOKORO_INITIAL_SILENCE_MS = 120;
+const DEFAULT_KOKORO_BOUNDARY_SILENCE_MS = 350;
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -99,6 +101,19 @@ function finiteNumber(value: unknown): number | undefined {
   if (!Number.isFinite(value)) return undefined;
   if (value < 0) return undefined;
   return value;
+}
+
+function envNumber(name: string, fallback: number): number {
+  const value = finiteNumber(Number(Bun.env[name]));
+  return value ?? fallback;
+}
+
+export function kokoroInitialSilenceMs(): number {
+  return envNumber('NARRATION_KOKORO_INITIAL_SILENCE_MS', DEFAULT_KOKORO_INITIAL_SILENCE_MS);
+}
+
+export function kokoroBoundarySilenceMs(): number {
+  return envNumber('NARRATION_KOKORO_BOUNDARY_SILENCE_MS', DEFAULT_KOKORO_BOUNDARY_SILENCE_MS);
 }
 
 function stringOption(value: unknown): string | undefined {
@@ -301,8 +316,13 @@ async function streamKokoroToCoreAudio(
 
     let wroteChunk = false;
     for await (const chunk of stream) {
-      if (wroteChunk)
-        await writeAudioChunk(proc.stdin, silenceBytes(chunk.audio.sampling_rate, 80));
+      await writeAudioChunk(
+        proc.stdin,
+        silenceBytes(
+          chunk.audio.sampling_rate,
+          wroteChunk ? kokoroBoundarySilenceMs() : kokoroInitialSilenceMs()
+        )
+      );
       await writeAudioChunk(proc.stdin, float32Bytes(chunk.audio.audio));
       wroteChunk = true;
     }
@@ -352,7 +372,7 @@ async function streamKokoroAudio(
     for await (const chunk of stream) {
       await writeAudioChunk(
         proc.stdin,
-        silenceBytes(chunk.audio.sampling_rate, wroteChunk ? 120 : 1500)
+        silenceBytes(chunk.audio.sampling_rate, wroteChunk ? kokoroBoundarySilenceMs() : 1500)
       );
       await writeAudioChunk(proc.stdin, float32Bytes(chunk.audio.audio));
       wroteChunk = true;

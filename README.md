@@ -191,17 +191,19 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/ai.applauselab.snitch.pl
 
 Useful service environment variables:
 
-| Variable                     | Description                                                                               |
-| ---------------------------- | ----------------------------------------------------------------------------------------- |
-| `NARRATION_BACKEND`          | `kokoro` or `say`. Written by init.                                                       |
-| `NARRATION_PORT`             | Service port. Defaults to `4766`.                                                         |
-| `NARRATION_HOST`             | Bind host. Defaults to `127.0.0.1`.                                                       |
-| `NARRATION_KOKORO_CACHE_DIR` | Hugging Face/Kokoro cache directory. Written by init.                                     |
-| `NARRATION_KOKORO_VOICE`     | Default Kokoro voice when the plugin does not provide one.                                |
-| `NARRATION_KOKORO_PLAYBACK`  | Set to `afplay` or `ffplay` for fallback playback modes. Unset uses the CoreAudio helper. |
-| `NARRATION_KOKORO_STREAM`    | Set to `0` to generate full WAV files instead of streaming chunks.                        |
-| `NARRATION_PCM_PLAYER_PATH`  | Override path to the CoreAudio helper.                                                    |
-| `NARRATION_FFPLAY_PATH`      | Override path to `ffplay`; default is `/opt/homebrew/bin/ffplay`.                         |
+| Variable                               | Description                                                                                         |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `NARRATION_BACKEND`                    | `kokoro` or `say`. Written by init.                                                                 |
+| `NARRATION_PORT`                       | Service port. Defaults to `4766`.                                                                   |
+| `NARRATION_HOST`                       | Bind host. Defaults to `127.0.0.1`.                                                                 |
+| `NARRATION_KOKORO_CACHE_DIR`           | Hugging Face/Kokoro cache directory. Written by init.                                               |
+| `NARRATION_KOKORO_VOICE`               | Default Kokoro voice when the plugin does not provide one.                                          |
+| `NARRATION_KOKORO_PLAYBACK`            | Set to `afplay` or `ffplay` for fallback playback modes. Unset uses the CoreAudio helper.           |
+| `NARRATION_KOKORO_STREAM`              | Set to `0` to generate full WAV files instead of streaming chunks.                                  |
+| `NARRATION_KOKORO_INITIAL_SILENCE_MS`  | Silence inserted before the first streamed Kokoro chunk. Defaults to `120`.                         |
+| `NARRATION_KOKORO_BOUNDARY_SILENCE_MS` | Silence inserted between streamed Kokoro sentence chunks to avoid clipped words. Defaults to `350`. |
+| `NARRATION_PCM_PLAYER_PATH`            | Override path to the CoreAudio helper.                                                              |
+| `NARRATION_FFPLAY_PATH`                | Override path to `ffplay`; default is `/opt/homebrew/bin/ffplay`.                                   |
 
 ## Runtime Layout
 
