@@ -147,7 +147,7 @@ export function createSaySpeaker(): Speaker {
 
 function kokoroVoice(value: string): string {
   if (/^[ab][fm]_[a-z0-9_]+$/i.test(value)) return value;
-  return Bun.env.NARRATION_KOKORO_VOICE ?? 'af_jessica';
+  return Bun.env.NARRATION_KOKORO_VOICE ?? 'bf_emma';
 }
 
 function ffplayPath(): string {

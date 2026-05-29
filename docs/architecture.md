@@ -180,16 +180,16 @@ I found the issue and I am applying the smallest fix.
 
 Default tag names and fence languages can be overridden with plugin options:
 
-| Option           | Default                                               | Meaning                                                                                                 |
-| ---------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `enabled`        | `true`                                                | Hard disable switch for the plugin.                                                                     |
-| `instructions`   | `true`                                                | Whether to inject the system instruction that tells the model how to use narration blocks.              |
-| `voice`          | `""`                                                  | Optional voice passed through to the service. For Kokoro, use a Kokoro voice name such as `af_jessica`. |
-| `rate`           | `0`                                                   | Optional speech rate, mainly for the macOS `say` backend.                                               |
-| `serviceUrl`     | `http://127.0.0.1:4766`                               | Local Snitch service URL.                                                                               |
-| `tags`           | `["narration"]`                                       | XML-like tags to extract.                                                                               |
-| `fenceLanguages` | `["narration", "narrate", "voiceover", "voice-over"]` | Markdown code fence languages to extract.                                                               |
-| `toggleFile`     | `.opencode-snitch-off`                                | File whose presence disables narration. Relative paths resolve from the worktree or config base.        |
+| Option           | Default                                               | Meaning                                                                                              |
+| ---------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `enabled`        | `true`                                                | Hard disable switch for the plugin.                                                                  |
+| `instructions`   | `true`                                                | Whether to inject the system instruction that tells the model how to use narration blocks.           |
+| `voice`          | `""`                                                  | Optional voice passed through to the service. For Kokoro, use a Kokoro voice name such as `bf_emma`. |
+| `rate`           | `0`                                                   | Optional speech rate, mainly for the macOS `say` backend.                                            |
+| `serviceUrl`     | `http://127.0.0.1:4766`                               | Local Snitch service URL.                                                                            |
+| `tags`           | `["narration"]`                                       | XML-like tags to extract.                                                                            |
+| `fenceLanguages` | `["narration", "narrate", "voiceover", "voice-over"]` | Markdown code fence languages to extract.                                                            |
+| `toggleFile`     | `.opencode-snitch-off`                                | File whose presence disables narration. Relative paths resolve from the worktree or config base.     |
 
 ## TUI Plugin Flow
 
@@ -321,7 +321,7 @@ sequenceDiagram
   Player->>Audio: play through CoreAudio
 ```
 
-Default Kokoro voice is `af_jessica`. You can override it with either a plugin `voice` option or `NARRATION_KOKORO_VOICE`. The service accepts Kokoro voice names that match the `af_jessica` style pattern.
+Default Kokoro voice is `bf_emma`. You can override it with either a plugin `voice` option or `NARRATION_KOKORO_VOICE`. The service accepts Kokoro voice names that match the `bf_emma` style pattern.
 
 Playback modes:
 
