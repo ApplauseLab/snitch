@@ -31,6 +31,10 @@ Restart OpenCode after init so it reloads plugin and TUI configuration.
 - `~/.snitch/logs/` - LaunchAgent stdout/stderr logs
 - `~/Library/LaunchAgents/ai.applauselab.snitch.plist` - macOS service entry
 
+## Architecture
+
+See [`docs/architecture.md`](docs/architecture.md) for the plugin flow, runtime layout, installer behavior, service API, and Mermaid diagrams.
+
 ## Development
 
 - `bun run build` - Build all packages and the Swift CoreAudio helper
