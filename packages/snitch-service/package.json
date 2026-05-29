@@ -1,0 +1,31 @@
+{
+  "name": "snitch-service",
+  "version": "0.0.1",
+  "description": "Timed macOS narration service with queued speech, pauses, and cue durations",
+  "author": "Kris",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "snitch-service": "./dist/index.js",
+    "snitch-pcm-player": "./dist/snitch-pcm-player"
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir dist --target bun --external kokoro-js --external @huggingface/transformers && swiftc ./src/pcm-player.swift -o ./dist/snitch-pcm-player",
+    "service": "bun run ./src/index.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.5.1",
+    "kokoro-js": "^1.2.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

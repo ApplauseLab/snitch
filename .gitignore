@@ -10,3 +10,5 @@ coverage/
 .bun/
 .bun.lockb
 .memory/
+.opencode-snitch-off
+.opencode-narration-off

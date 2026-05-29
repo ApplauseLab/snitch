@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">Snitch logo</title>
+  <desc id="desc">A pixel-art ear and square mouth snitching blocky sound waves.</desc>
+  <rect width="512" height="512" rx="56" fill="#07140C" />
+  <rect x="48" y="48" width="416" height="416" rx="24" fill="#0B1E10" />
+  <rect x="80" y="80" width="352" height="352" fill="#102A17" />
+  <rect x="112" y="112" width="64" height="32" fill="#B6FF5C" />
+  <rect x="80" y="144" width="128" height="64" fill="#B6FF5C" />
+  <rect x="80" y="208" width="160" height="96" fill="#8AF044" />
+  <rect x="112" y="304" width="128" height="64" fill="#59D531" />
+  <rect x="144" y="368" width="64" height="32" fill="#2BBF25" />
+  <rect x="144" y="176" width="64" height="64" fill="#07140C" />
+  <rect x="176" y="240" width="64" height="64" fill="#07140C" />
+  <rect x="176" y="304" width="32" height="32" fill="#07140C" />
+  <rect x="112" y="208" width="32" height="96" fill="#D7FF93" opacity="0.95" />
+  <rect x="256" y="192" width="128" height="128" fill="#07140C" />
+  <rect x="256" y="160" width="96" height="32" fill="#B6FF5C" />
+  <rect x="256" y="320" width="96" height="32" fill="#2BBF25" />
+  <rect x="352" y="192" width="32" height="128" fill="#59D531" />
+  <rect x="288" y="224" width="64" height="64" fill="#FF5C7A" />
+  <rect x="288" y="224" width="64" height="24" fill="#FFB3C0" />
+  <rect x="288" y="288" width="64" height="16" fill="#9B1734" />
+  <rect x="272" y="176" width="32" height="16" fill="#E7FFC0" />
+  <rect x="272" y="320" width="32" height="16" fill="#83EA45" />
+  <rect x="400" y="176" width="32" height="32" fill="#B6FF5C" />
+  <rect x="432" y="144" width="32" height="32" fill="#B6FF5C" />
+  <rect x="400" y="240" width="48" height="32" fill="#8AF044" />
+  <rect x="448" y="240" width="32" height="32" fill="#8AF044" />
+  <rect x="400" y="304" width="32" height="32" fill="#59D531" />
+  <rect x="432" y="336" width="32" height="32" fill="#59D531" />
+  <rect x="96" y="416" width="320" height="16" fill="#030804" opacity="0.7" />
+</svg>

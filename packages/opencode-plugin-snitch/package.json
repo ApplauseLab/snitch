@@ -1,0 +1,36 @@
+{
+  "name": "opencode-plugin-snitch",
+  "version": "0.0.1",
+  "description": "OpenCode plugin that snitches narration blocks to Snitch",
+  "author": "Kris",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tui": {
+      "types": "./dist/tui.d.ts",
+      "default": "./dist/tui.js"
+    }
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts ./src/tui.ts --outdir dist --target bun"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "latest"
+  }
+}

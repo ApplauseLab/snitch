@@ -1,0 +1,25 @@
+{
+  "name": "snitch",
+  "version": "0.0.1",
+  "description": "Installer CLI for Snitch hands-free OpenCode narration on macOS",
+  "author": "Kris",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "snitch": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir dist --target bun"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

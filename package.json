@@ -1,30 +1,23 @@
 {
-  "name": "{{moduleName}}",
+  "name": "snitch-monorepo",
   "version": "0.0.1",
-  "description": "{{description}}",
-  "author": {
-    "name": "{{authorName}}",
-    "email": "{{authorEmail}}"
-  },
+  "description": "Snitch service and OpenCode plugin packages",
+  "author": "Kris",
+  "private": true,
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "{{repositoryUrl}}"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "files": [
-    "dist",
-    "src/version.ts"
+  "workspaces": [
+    "packages/*"
   ],
+  "scripts": {
+    "build": "bun build ./packages/snitch-service/src/index.ts --outdir ./packages/snitch-service/dist --target bun --external kokoro-js --external @huggingface/transformers && swiftc ./packages/snitch-service/src/pcm-player.swift -o ./packages/snitch-service/dist/snitch-pcm-player && bun build ./packages/opencode-plugin-snitch/src/index.ts ./packages/opencode-plugin-snitch/src/tui.ts --outdir ./packages/opencode-plugin-snitch/dist --target bun && bun build ./packages/opencode-plugin-snitch-tui/src/index.ts --outdir ./packages/opencode-plugin-snitch-tui/dist --target bun && bun build ./packages/snitch/src/index.ts --outdir ./packages/snitch/dist --target bun",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "service": "bun run ./packages/snitch-service/src/index.ts"
+  },
   "devDependencies": {
+    "@opencode-ai/plugin": "latest",
+    "@opencode-ai/sdk": "latest",
     "@eslint/js": "^9.39.1",
     "@types/node": "^20.11.5",
     "@typescript-eslint/eslint-plugin": "8.47.0",

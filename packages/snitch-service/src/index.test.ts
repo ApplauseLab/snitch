@@ -1,0 +1,114 @@
+import { describe, expect, test } from 'bun:test';
+
+import {
+  createNarrationServer,
+  NarrationService,
+  narrationTextForRendering,
+  normalizeNarrationRequest,
+  type SayOptions,
+} from './index.ts';
+
+describe('normalizeNarrationRequest', () => {
+  test('accepts one text narration', () => {
+    expect(normalizeNarrationRequest({ text: 'hello', durationMs: 1000 })).toMatchObject({
+      text: 'hello',
+      durationMs: 1000,
+    });
+  });
+
+  test('accepts say and pause steps', () => {
+    expect(
+      normalizeNarrationRequest({
+        steps: [{ text: 'first' }, { type: 'pause', pauseMs: 250 }, { text: 'second', atMs: 1000 }],
+      })
+    ).toMatchObject({
+      steps: [{ text: 'first' }, { type: 'pause', pauseMs: 250 }, { text: 'second', atMs: 1000 }],
+    });
+  });
+
+  test('rejects empty bodies', () => {
+    expect(() => normalizeNarrationRequest({})).toThrow('text or steps');
+  });
+});
+
+describe('NarrationService', () => {
+  test('queues narration steps through the speaker', async () => {
+    const spoken: Array<{ text: string; options: Required<SayOptions> }> = [];
+    const service = new NarrationService(async (text, options) => {
+      spoken.push({ text, options });
+    });
+
+    const job = service.enqueue({
+      voice: 'Samantha',
+      steps: [{ text: 'first' }, { text: 'second' }],
+    });
+    await waitFor(() => service.getJob(job.id)?.status === 'completed');
+
+    expect(spoken.map((item) => item.text)).toEqual(['first', 'second']);
+    expect(spoken[0]?.options.voice).toBe('Samantha');
+  });
+});
+
+describe('narrationTextForRendering', () => {
+  test('turns pauses and cue offsets into renderable speech text', () => {
+    expect(
+      narrationTextForRendering({
+        steps: [
+          { text: 'first' },
+          { type: 'pause', pauseMs: 250 },
+          { text: 'second', atMs: 1000, durationMs: 500 },
+        ],
+      })
+    ).toContain('[[slnc 250]]');
+  });
+});
+
+describe('createNarrationServer', () => {
+  test('accepts narration jobs over HTTP', async () => {
+    const spoken: string[] = [];
+    const service = new NarrationService(async (text) => {
+      spoken.push(text);
+    });
+    const server = createNarrationServer(service);
+
+    const response = await server(
+      new Request('http://localhost/v1/narration', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text: 'hello' }),
+      })
+    );
+
+    expect(response.status).toBe(202);
+    await waitFor(() => spoken.length === 1);
+    expect(spoken).toEqual(['hello']);
+  });
+
+  test('returns rendered narration audio bytes', async () => {
+    const service = new NarrationService(
+      async () => undefined,
+      async () => new Uint8Array([1, 2, 3])
+    );
+    const server = createNarrationServer(service);
+
+    const response = await server(
+      new Request('http://localhost/v1/narration/render', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text: 'hello' }),
+      })
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toBe('audio/aiff');
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+  });
+});
+
+async function waitFor(predicate: () => boolean): Promise<void> {
+  const started = Date.now();
+  while (!predicate()) {
+    if (Date.now() - started > 1000) throw new Error('Timed out waiting for predicate');
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+}

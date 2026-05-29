@@ -1,0 +1,28 @@
+{
+  "name": "opencode-plugin-snitch-tui",
+  "version": "0.0.1",
+  "description": "OpenCode TUI companion plugin for Snitch",
+  "author": "Kris",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir dist --target bun"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "latest"
+  }
+}
