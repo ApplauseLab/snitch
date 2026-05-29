@@ -1,6 +1,6 @@
 {
   "name": "snitch-monorepo",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Snitch service and OpenCode plugin packages",
   "author": "Kris",
   "private": true,
