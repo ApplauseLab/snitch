@@ -16,6 +16,8 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
     "service": "bun run ./packages/snitch-service/src/index.ts"
   },
   "devDependencies": {

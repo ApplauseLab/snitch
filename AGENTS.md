@@ -2,13 +2,14 @@
 
 ## Build & Test Commands
 
-- **Build**: `mise run build` or `bun build ./src/index.ts --outdir dist --target bun`
-- **Test**: `mise run test` or `bun test`
-- **Single Test**: `bun test BackgroundTask.test.ts` (use file glob pattern)
+- **Install**: `bun install`
+- **Build**: `bun run build`
+- **Test**: `bun test`
+- **Single Test**: `bun test packages/snitch/src/init.test.ts` (use file glob pattern)
 - **Watch Mode**: `bun test --watch`
-- **Lint**: `mise run lint` (eslint)
-- **Fix Lint**: `mise run lint:fix` (eslint --fix)
-- **Format**: `mise run format` (prettier)
+- **Lint**: `bun run lint`
+- **Fix Lint**: `bun run lint:fix`
+- **Format**: `bun run format`
 
 ## Code Style Guidelines
 
@@ -60,6 +61,6 @@
 
 ## Project Context
 
-- **Type**: ES Module package for Bun modules
+- **Type**: ES Module Bun workspace
 - **Target**: Bun runtime, ES2021+
-- **Purpose**: General-purpose Bun module development
+- **Purpose**: Snitch OpenCode narration plugin, service, and installer
