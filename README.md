@@ -211,6 +211,8 @@ Useful service environment variables:
 | `NARRATION_PCM_PLAYER_PATH`            | Override path to the CoreAudio helper.                                                              |
 | `NARRATION_FFPLAY_PATH`                | Override path to `ffplay`; default is `/opt/homebrew/bin/ffplay`.                                   |
 
+The render endpoint returns binary audio from the active service backend. Kokoro renders WAV bytes; the macOS `say` backend renders AIFF bytes.
+
 ## Runtime Layout
 
 - `~/.snitch/service/` - stable service entrypoint and CoreAudio helper

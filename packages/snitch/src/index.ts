@@ -11,7 +11,7 @@ export const SNITCH_SKILL = `# Snitch Skill
 
 Use Snitch when you need local speech or rendered narration audio from any agent or script, even when OpenCode is not involved.
 
-Snitch runs a local HTTP service at http://127.0.0.1:4766 by default. The service can queue speech for immediate playback, report job status, or render audio bytes. On macOS, rendered audio uses the built-in \`say\` backend and returns AIFF bytes.
+Snitch runs a local HTTP service at http://127.0.0.1:4766 by default. The service can queue speech for immediate playback, report job status, or render audio bytes. Kokoro renders WAV bytes; the macOS \`say\` backend renders AIFF bytes.
 
 ## Required Setup
 
@@ -75,15 +75,15 @@ Step shape:
 
 ## Render Audio Bytes
 
-Use \`POST /v1/narration/render\` when you want audio data instead of immediate playback. If you omit \`outputPath\`, the response body is the binary AIFF audio bytes.
+Use \`POST /v1/narration/render\` when you want audio data instead of immediate playback. If you omit \`outputPath\`, the response body is the binary audio bytes.
 
-Save returned bytes with curl:
+Save returned bytes with curl. With the Kokoro backend, use a \`.wav\` filename:
 
 \`\`\`bash
 curl -fsS -X POST http://127.0.0.1:4766/v1/narration/render \\
   -H 'content-type: application/json' \\
   --data '{"text":"This audio was rendered by Snitch."}' \\
-  --output narration.aiff
+  --output narration.wav
 \`\`\`
 
 Fetch bytes from JavaScript:
@@ -120,7 +120,7 @@ For queued Kokoro playback, use Kokoro voice names such as \`bf_emma\`, \`af_hea
 { "text": "Hello from Kokoro.", "voice": "bf_emma" }
 \`\`\`
 
-For rendered AIFF output, Snitch uses macOS \`say\`, so use installed macOS voices and optional \`rate\`:
+For rendered output with the \`say\` backend, Snitch uses macOS \`say\`, so use installed macOS voices and optional \`rate\`:
 
 \`\`\`json
 { "text": "Hello from macOS say.", "voice": "Samantha", "rate": 185 }

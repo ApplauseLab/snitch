@@ -1,12 +1,16 @@
+import { TextDecoder } from 'node:util';
+
 import { describe, expect, test } from 'bun:test';
 
 import {
   createNarrationServer,
+  createNarrationServiceForBackend,
   kokoroBoundarySilenceMs,
   kokoroInitialSilenceMs,
   NarrationService,
   narrationTextForRendering,
   normalizeNarrationRequest,
+  wavBytesForFloat32,
   type SayOptions,
 } from './index.ts';
 
@@ -104,6 +108,27 @@ describe('createNarrationServer', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('audio/aiff');
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+  });
+
+  test('uses WAV headers for Kokoro render responses', () => {
+    expect(createNarrationServiceForBackend('kokoro').getRenderHeaders()).toMatchObject({
+      'content-type': 'audio/wav',
+      'content-disposition': 'attachment; filename="narration.wav"',
+    });
+  });
+});
+
+describe('wavBytesForFloat32', () => {
+  test('writes a mono PCM WAV file', () => {
+    const bytes = wavBytesForFloat32([new Float32Array([0, 0.5, -0.5])], 24000);
+    const header = new TextDecoder().decode(bytes.slice(0, 4));
+    const wave = new TextDecoder().decode(bytes.slice(8, 12));
+    const view = new DataView(bytes.buffer);
+
+    expect(header).toBe('RIFF');
+    expect(wave).toBe('WAVE');
+    expect(view.getUint32(24, true)).toBe(24000);
+    expect(view.getUint16(34, true)).toBe(16);
   });
 });
 

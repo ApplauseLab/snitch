@@ -237,12 +237,12 @@ The service listens on `127.0.0.1:4766` by default. It is implemented in `packag
 
 Agents and scripts can print direct API usage docs with `snitch skill`. This path does not require OpenCode; it only requires the local Snitch service to be running.
 
-| Method | Path                   | Description                                                   |
-| ------ | ---------------------- | ------------------------------------------------------------- |
-| `GET`  | `/health`              | Returns `{ "ok": true }`.                                     |
-| `POST` | `/v1/narration`        | Queues a speech job and returns the job with status `queued`. |
-| `GET`  | `/v1/jobs/:id`         | Returns queued/running/completed/failed job status.           |
-| `POST` | `/v1/narration/render` | Renders narration to an AIFF file with macOS `say`.           |
+| Method | Path                   | Description                                                               |
+| ------ | ---------------------- | ------------------------------------------------------------------------- |
+| `GET`  | `/health`              | Returns `{ "ok": true }`.                                                 |
+| `POST` | `/v1/narration`        | Queues a speech job and returns the job with status `queued`.             |
+| `GET`  | `/v1/jobs/:id`         | Returns queued/running/completed/failed job status.                       |
+| `POST` | `/v1/narration/render` | Renders narration to audio bytes. Kokoro returns WAV; `say` returns AIFF. |
 
 Minimal narration request:
 
